@@ -16,9 +16,21 @@ router.get('/ultimacarga', async (req, res) => {
     }
 });
 
-router.get('/examenes', async (req, res) => {
+router.get('/examenes/:fuerza', async (req, res) => {
+    const fuerza = req.params.fuerza;
+    const fechas = []
+
+    if(fuerza === 'policia') {
+        fechas.push('2024-07-02');
+        fechas.push('2024-07-03');
+        fechas.push('2024-07-04');
+    }else{
+        fechas.push('2024-07-10');
+        fechas.push('2024-07-11');
+    }
+
     try {
-        const result = await connection.query('SELECT * FROM examen');
+        const result = await connection.query('SELECT * FROM examen WHERE fecha IN (?)', [fechas]);
         res.json(result[0]);
     } catch (error) {
         res.status(500).json({ error: error.message });
